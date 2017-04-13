@@ -1,0 +1,33 @@
+AD = ['000', '10101', '11']
+s = '01001010010'
+
+
+def checkAntiDict(antiDict, word):
+    # Case where suffix is empty
+    if len(word) <= 1:
+        return True
+
+    # Get suffix of word
+    suf = word[1:]
+
+    for w in antiDict:
+        if w in (suf + '0') or w in (suf + '1'):
+            return False
+
+    return True
+
+
+def encode(antiDict, string):
+    prefix = ''
+    compressed = ''
+
+    for a in string:
+
+        print('a = ' + a + ' V = ' + prefix + ' C = ' + compressed)
+
+        prefix += a
+
+        if checkAntiDict(antiDict, prefix):
+            compressed += a
+
+    return compressed
