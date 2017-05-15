@@ -1,0 +1,10 @@
+import FactorDAWG
+import MFW
+
+def main():
+    fw = MFW("A cat on a bridge plays hopscotch?")
+
+    print("help")
+
+if __name__ == "__main__":
+    main()
