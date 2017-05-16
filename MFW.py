@@ -27,7 +27,18 @@ class MFW():
             state = self.MFWA[state][a]
         
         return False
-        
+
+
+    def Encode(self,string):
+        state = 0
+        pass
+
+    def Decode(self,string):
+        pass
+
+    def ConvertToTransducer(self,string):
+        pass
+
     #Builds a MFW automaton for testing whether word is in anti-dictionary
     def __build__(self):
         #Each node contains data: adj, dist, prev and path
