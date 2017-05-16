@@ -2,13 +2,17 @@ import FactorDAWG as FD
 
 class MFW():
 
-    def __init__(self, string):
-
-        #Create factor dawg class
-        self.__fDAWG = FD.FactorDAWG(string)
-        #Create minimal forbidden words automation
-        self.MFWA = []
-        self.__build__()
+    def __init__(self, string_or_bytearray):
+        if type(string_or_bytearray) is str:
+            #Create factor dawg class
+            self.__fDAWG = FD.FactorDAWG(string_or_bytearray)
+            #Create minimal forbidden words automation
+            self.MFWA = []
+            self.__build__()
+        elif type(string_or_bytearray) is bytearray:
+            self.__fDAWG = None
+            self.MFWA = []
+            self.decodeFromByteArray(string_or_bytearray)
 
     #Checks whether word is in MFWA
     def isInAntiDict(self,string):
@@ -69,3 +73,38 @@ class MFW():
 
         for n in nodes:
             self.MFWA.append(n[3])
+
+    def encodeAsByteArray(self): #outputs dfa as bytearray
+        OutArray = bytearray()
+        numEntries = len(self.MFWA)+1#+1 is for the end state, -1
+        intSize = 0
+        temp = numEntries-1#top index
+        while temp > 0: #figures out how large each integer needs to be to index all entries
+            intSize += 1
+            temp = temp >> 8
+        NewEndstate = (1 << (intSize * 8)) - 1 #highest possible value given intsize
+        OutArray.extend(intSize.to_bytes(1, byteorder = 'big'))
+        for tup in self.MFWA:
+            for i in tup:
+                if(i == -1): #can't store -1, so will instead be stored as top possible value.
+                    i = NewEndstate
+                OutArray.extend(i.to_bytes(intSize, byteorder= 'big'))
+        return OutArray
+
+    def decodeFromByteArray(self, ByteArray):
+        intSize = int(ByteArray[0])
+        pos = 1 #start right after where intSize is stored
+        size = len(ByteArray)
+        endState = (1 << (intSize * 8)) - 1
+        while pos < size:
+            first = int.from_bytes(ByteArray[pos:pos+intSize], byteorder='big')
+            #first integer is made from intsize bytes starting at pos
+            second = int.from_bytes(ByteArray[pos+intSize:pos+(2*intSize)], byteorder='big')
+            #second made from intsize bytes starting at pos+intsize
+            if first == endState:
+                first = -1
+            if second == endState:
+                second = -1
+            self.MFWA.append((first, second))
+            pos += intSize * 2
+

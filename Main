@@ -1,9 +1,12 @@
-import FactorDAWG
 import MFW
 
 def main():
-    fw = MFW("A cat on a bridge plays hopscotch?")
-
+    fw = MFW.MFW("101010100011011100010101")
+    ba = fw.encodeAsByteArray()
+    #values = []
+    #for i in ba:
+    #    values.append(i)
+    newfw = MFW.MFW(ba)
     print("help")
 
 if __name__ == "__main__":
