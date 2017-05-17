@@ -28,7 +28,11 @@ class FactorDAWG():
         else:
             self.__suf.append(-1)
             return -1
-    
+
+    #Wrapper for getSuf, for external use.
+    def getSuf(self,index):
+        return self.__getSuf(index)
+
     #Creates a new empty state with no transitions (indicated by [-1,-1])
     def __newState(self):
         

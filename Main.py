@@ -2,8 +2,9 @@ import MFW
 
 def main():
     #inputstring = ASCII_toBinStr("All the parks are full of flamingos and booze drums cranberry candycanes")
-    inputstring = '101010100010101111010101'
+    inputstring = '1000101010011'
     fw = MFW.MFW(inputstring)
+    fw.createTransducer()
     #length, compressed = encode(fw, inputstring)
     #binoutput = decode(fw, length, compressed)
     #print(binoutput)

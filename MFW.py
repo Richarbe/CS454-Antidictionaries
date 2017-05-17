@@ -9,11 +9,13 @@ class MFW():
             self.MFWA = []
             self.__paths = []
             self.__build__()
+            self.Transducer = []
         elif type(string_or_bytearray) is bytearray:
             self.__fDAWG = None
             self.MFWA = []
             self.__paths = []
             self.decodeFromByteArray(string_or_bytearray)
+            self.Transducer = []
 
     # Checks whether word is in MFWA
     def isInAntiDict(self, string):
@@ -29,16 +31,24 @@ class MFW():
 
         return False
 
-
     def Encode(self,string):
-        state = 0
-        pass
+        outputTape = ""
+        
 
     def Decode(self,string):
         pass
 
-    def ConvertToTransducer(self,string):
-        pass
+    def createTransducer(self):
+        sink = len(self.MFWA) - 1
+        self.Transducer = []
+        for state in range(len(self.MFWA) - 1):
+            temp = self.MFWA[state][:]
+            for i in range(2):
+                if temp[i] == sink:
+                    temp[i] = -1
+            self.Transducer.append(temp)
+        return
+
 
     #Builds a MFW automaton for testing whether word is in anti-dictionary
 
