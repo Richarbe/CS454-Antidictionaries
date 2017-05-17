@@ -74,7 +74,7 @@ class FactorDAWG():
             
             w = self.__getSuf(p)
             
-            #While w is not nil, and  δ(w, a) = nil:
+            #While w is not nil, and  delta(w, a) = nil:
             while ((w != -1) and (self.delta[w][a] == -1)):
                 self.__nonsolidTransaction(w,q,a)
                 w = self.__getSuf(w)
@@ -83,7 +83,7 @@ class FactorDAWG():
             
             if w == -1: #If w i nil
                 self.__setSuf(q,0)
-            elif self.__solid[w][a]: #IF δ(w, a) = v is a solid transaction
+            elif self.__solid[w][a]: #IF delta(w, a) = v is a solid transaction
                 self.__setSuf(q,v)
             else:
                 #Perform SPLIT algorithm
@@ -96,7 +96,7 @@ class FactorDAWG():
                 self.__solid[qp][0] = False
                 self.__solid[qp][1] = False
                 
-                #change δ(w, a) = q into a solid transaction δ(w, a) = q'
+                #change delta(w, a) = q into a solid transaction delta(w, a) = q'
                 self.delta[w][a] = qp
                 
                 self.__setSuf(q,qp)
@@ -105,7 +105,7 @@ class FactorDAWG():
                 
                 w = self.__getSuf(w)
                 
-                #while w != nil and δ(w, a) is a solid transaction do:
+                #while w != nil and delta(w, a) is a solid transaction do:
                 while w != -1 and self.__solid[w][a]:
                     self.delta[w][a] = qp
                     w = self.__getSuf(w)
