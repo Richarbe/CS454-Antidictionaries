@@ -29,7 +29,19 @@ class MFW():
 
         return False
 
-    # Builds a MFW automaton for testing whether word is in anti-dictionary
+
+    def Encode(self,string):
+        state = 0
+        pass
+
+    def Decode(self,string):
+        pass
+
+    def ConvertToTransducer(self,string):
+        pass
+
+    #Builds a MFW automaton for testing whether word is in anti-dictionary
+
     def __build__(self):
         # Each node contains data: adj, dist, prev and path
         # dist is distance to source, prev is previous node index, adj is the adjacency list
@@ -91,7 +103,7 @@ class MFW():
 
     def encodeAsByteArray(self):  # outputs dfa as bytearray
         OutArray = bytearray()
-        numEntries = len(self.MFWA) + 1  # +1 is for the end state, -1
+        numEntries = len(self.MFWA)+2#+1 is for the end state, -1
         intSize = 0
         temp = numEntries - 1  # top index
         while temp > 0:  # figures out how large each integer needs to be to index all entries
@@ -103,7 +115,9 @@ class MFW():
             for i in tup:
                 if (i == -1):  # can't store -1, so will instead be stored as top possible value.
                     i = NewEndstate
-                OutArray.extend(i.to_bytes(intSize, byteorder='big'))
+                if(i == -2): #same
+                    i = NewEndstate - 1
+                OutArray.extend(i.to_bytes(intSize, byteorder= 'big'))
         return OutArray
 
     def decodeFromByteArray(self, ByteArray):
@@ -112,13 +126,13 @@ class MFW():
         size = len(ByteArray)
         endState = (1 << (intSize * 8)) - 1
         while pos < size:
-            first = int.from_bytes(ByteArray[pos:pos + intSize], byteorder='big')
-            # first integer is made from intsize bytes starting at pos
-            second = int.from_bytes(ByteArray[pos + intSize:pos + (2 * intSize)], byteorder='big')
-            # second made from intsize bytes starting at pos+intsize
-            if first == endState:
-                first = -1
-            if second == endState:
-                second = -1
+            first = int.from_bytes(ByteArray[pos:pos+intSize], byteorder='big')
+            #first integer is made from intsize bytes starting at pos
+            second = int.from_bytes(ByteArray[pos+intSize:pos+(2*intSize)], byteorder='big')
+            #second made from intsize bytes starting at pos+intsize
+            if first >= endState - 1:
+                first = first - (endState + 1) #-1 if endstate, -2 is endstate-1
+            if second >= endState - 1:
+                second = second - (endState + 1) #-1 if endstate, -2 is endstate-1
             self.MFWA.append((first, second))
             pos += intSize * 2
