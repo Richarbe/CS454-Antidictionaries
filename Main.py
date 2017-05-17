@@ -4,15 +4,16 @@ def main():
     #inputstring = ASCII_toBinStr("All the parks are full of flamingos and booze drums cranberry candycanes")
     inputstring = '101010100010101111010101'
     fw = MFW.MFW(inputstring)
-    length, compressed = encode(fw, inputstring)
-    binoutput = decode(fw, length, compressed)
-    #ba = fw.encodeAsByteArray()
-    #values = []
-    #for i in ba:
-    #    values.append(i)
-    #newfw = MFW.MFW(ba)
-    #asciioutput = binStrTo_ASCII(binoutput)
-    print("help")
+    #length, compressed = encode(fw, inputstring)
+    #binoutput = decode(fw, length, compressed)
+    #print(binoutput)
+
+    ba = binStrMFWto_ByteArray(inputstring, fw)
+    newstring, newfw = binStrMFWfrom_ByteArray(ba)
+    print(newstring)
+    a = binStrTo_ByteArray('10100100100100100011111010110101')
+    b = binStrFrom_ByteArray(a)
+
 
 def encode(mfw, string):
     s = ''
@@ -70,6 +71,27 @@ def ASCII_toBinStr(string):
 def binStrTo_ASCII(binString):
     n = int('0b' + binString, 2)
     return n.to_bytes((n.bit_length() + 7) // 8, 'big').decode()
+
+def binStrTo_ByteArray(string):
+    return int(string, 2).to_bytes((len(string)+7) // 8, 'big')
+
+def binStrFrom_ByteArray(ByteArray):
+    return bin(int.from_bytes(ByteArray, 'big'))[2:]
+
+def binStrMFWto_ByteArray(binString, mfw):
+    messagebytes = binStrTo_ByteArray(binString)
+    dictionarybytes = mfw.encodeAsByteArray()
+    output = bytearray()
+    output.extend(len(messagebytes).to_bytes(4, byteorder='big'))
+    output.extend(messagebytes)
+    output.extend(dictionarybytes)
+    return output
+
+def binStrMFWfrom_ByteArray(ByteArray):
+    len_message = int.from_bytes(ByteArray[0:4], byteorder='big')
+    binStr = binStrFrom_ByteArray(ByteArray[4:len_message+4])
+    mfw = MFW.MFW(ByteArray[len_message+4:])
+    return binStr, mfw
 
 if __name__ == "__main__":
     main()
