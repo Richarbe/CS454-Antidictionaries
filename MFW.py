@@ -32,11 +32,40 @@ class MFW():
         return False
 
     def Encode(self,string):
+        #from page 8 of Crochemore "Data Compression using Antidictionaries" (antidict.pdf)
         outputTape = ""
-        
+        state = 0
+        for l in string:
+            a = int(l)
+            if self.Transducer[state][a] == -1:
+                return outputTape
+            if self.Transducer[state][0] != -1 or self.Transducer[state][1] != -1:
+                    if self.Transducer[state][0] != -1 and self.Transducer[state][1] != -1:
+                        #has two outgoing edges
+                        outputTape += l
+                    else:
+                        #has one outgoing edge
+                        #add nothing to output tape
+                        pass
+        return outputTape
 
-    def Decode(self,string):
-        pass
+
+    def Decode(self,string, length): #currently exact copy of encode, no idea what I am doing.
+        outputTape = ""
+        state = 0
+        for l in string:
+            a = int(l)
+            if self.Transducer[state][a] == -1:
+                return outputTape
+            if self.Transducer[state][0] != -1 or self.Transducer[state][1] != -1:
+                    if self.Transducer[state][0] != -1 and self.Transducer[state][1] != -1:
+                        #has two outgoing edges
+                        outputTape += l
+                    else:
+                        #has one outgoing edge
+                        #add nothing to output tape
+                        pass
+        return outputTape
 
     def createTransducer(self):
         sink = len(self.MFWA) - 1
