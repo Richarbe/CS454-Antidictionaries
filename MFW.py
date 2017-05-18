@@ -31,6 +31,20 @@ class MFW():
 
         return False
 
+    def isInMFW(self, string):
+
+        state = 0
+        for l in string:
+            a = int(l)
+            if state == -2:
+                return False
+            if self.MFWA[state][a] == -1:
+                return False
+            state = self.MFWA[state][a]
+        if self.MFWA[state][a] == -2:
+            return True
+        return False
+
     def Encode(self,string):
         #from page 8 of Crochemore "Data Compression using Antidictionaries" (antidict.pdf)
         outputTape = ""
